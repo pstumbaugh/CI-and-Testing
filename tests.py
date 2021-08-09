@@ -1,5 +1,7 @@
+import datetime
+import random
 import unittest
-from task import my_datetime
+from task import my_datetime, get_final_string_date
 from task import conv_endian
 from task import conv_num
 
@@ -144,6 +146,26 @@ class TestCase(unittest.TestCase):
     def test21_my_datetime(self):
         expected = "02-28-4565"
         self.assertEqual(my_datetime(81895424554), expected)
+
+    # testing for max year of 9999
+    def test22_my_datetime(self):
+        expected = "12-31-9999"
+        self.assertEqual(my_datetime(253402287921), expected)
+
+    # using datetime, pick a random number of seconds and compare to
+    # my_datetime function to check equal
+    # 253402287921 is max for datetime (gives max year of 9999).
+    def test23_my_datetime_random(self):
+        counter = 1
+        while counter <= 2000:
+            random_number = random.randint(0, 253402287921)
+            date_from_current_time = datetime.datetime.utcfromtimestamp(
+                random_number)
+            string_date = get_final_string_date(
+                date_from_current_time.month, date_from_current_time.day,
+                date_from_current_time.year)
+            self.assertEqual(my_datetime(random_number), string_date)
+            counter += 1
 
     # Check that conv_num rejects strings with multiple decimal points
     def test1_conv_num(self):
